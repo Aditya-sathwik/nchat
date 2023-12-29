@@ -23,19 +23,18 @@ const Register = () => {
       //Create user
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      //Create a unique image name
       const date = new Date().getTime();
       const storageRef = ref(storage, `${displayName + date}`);
 
       await uploadBytesResumable(storageRef, file).then(() => {
         getDownloadURL(storageRef).then(async (downloadURL) => {
           try {
-            //Update profile
+
             await updateProfile(res.user, {
               displayName,
               photoURL: downloadURL,
             });
-            //create user on firestore
+           
             await setDoc(doc(db, "users", res.user.uid), {
               uid: res.user.uid,
               displayName,
@@ -43,7 +42,6 @@ const Register = () => {
               photoURL: downloadURL,
             });
 
-            //create empty user chats on firestore
             await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");
           } catch (err) {
@@ -61,8 +59,9 @@ const Register = () => {
 
   return (
     <div className="formContainer">
+      <div className="form">
       <div className="formWrapper">
-        <span className="logo">Lama Chat</span>
+        <span className="logo">Nielit Chat</span>
         <span className="title">Register</span>
         <form onSubmit={handleSubmit}>
           <input required type="text" placeholder="display name" />
@@ -80,6 +79,8 @@ const Register = () => {
         <p>
           You do have an account? <Link to="/register">Login</Link>
         </p>
+      </div>
+      
       </div>
     </div>
   );
